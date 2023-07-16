@@ -11,18 +11,16 @@ char teclado;
 int indice=0,vez=0;
 
 void tecla(); //converte caracter em inteiro.
-void info(); //imprime instruÁıes.
-void imprimir(char* wjogo); //imprime a tabela em cada inst‚ncia.
+void info(); //imprime instru√ß√µes.
+void imprimir(char* wjogo); //imprime a tabela em cada inst√¢ncia.
 
-int main()
-{
+int main(){
     setlocale(LC_ALL,"portuguese");
     info();
 
-    do
-    {
+    do{
         continuar=_getch();
-    } while (continuar!='s' && continuar!='n'); //garante que n„o haja entrada inv·lida.
+    } while (continuar!='s' && continuar!='n'); //garante que n√£o haja entrada inv√°lida.
 
     while (continuar=='s')
     {
@@ -71,7 +69,7 @@ int main()
             }
             if (jogo[1]=='x' && jogo[5]=='x' && jogo[9]=='x')
             {
-                printf("x venceu na diagonal secund·ria.");
+                printf("x venceu na diagonal secund√°ria.");
                 break;
             }
 
@@ -112,7 +110,7 @@ int main()
             }
             if (jogo[9]=='O' && jogo[5]=='O' && jogo[1]=='O')
             {
-                printf("(o) venceu na diagonal secund·ria.");
+                printf("(o) venceu na diagonal secund√°ria.");
                 break;
             }
              if(fim==45)
@@ -131,7 +129,7 @@ int main()
 
                     if (jogo[ind] == 'x'|| jogo[ind] =='O')
                     {
-                        ind = 10; //para fazer novamente o laÁo.
+                        ind = 10; //para fazer novamente o la√ßo.
                     }
                 } while (ind < 1 || ind > 9);
 
@@ -141,13 +139,12 @@ int main()
             if (indice%2 != 0)
             {
                 printf(" vez da bolinha(o)\n\n");
-                do
-                {
+                do{
                     teclado=_getch();
                     tecla();
                     if (jogo[ind] == 'O'|| jogo[ind] == 'x')
                     {
-                        ind = 10; //para fazer novamente o laÁo.
+                        ind = 10; //para fazer novamente o la√ßo.
                     }
                 } while (ind < 1 || ind > 9);
                 jogo[ind]='O';
@@ -159,13 +156,14 @@ int main()
         fim=0;
         vez++;
         vez%2 != 0 ? indice= 1 : 0;
-        printf("\n\n\tjogar novamente?\n\t(s)sim  (n)n„o");
-        do
-        {
+        printf("\n\n\tjogar novamente?\n\t(s)sim  (n)n√£o");
+        
+        do{
         continuar=_getch();
         } while (continuar!='s' && continuar!='n');
     } 
 }
+
 void tecla()
 {
     switch (teclado)
@@ -211,10 +209,10 @@ void tecla()
 void info() {
     printf("\n\tJogo da velha. #1\n\n\tComo jogar: \n\n");
     printf("\t     |     |     \n\t  7  |  8  |  9  \n\t_____|_____|_____");
-    printf("\n\t     |     |     \t*use o teclado numÈrico para seleciona");
-    printf("r\n\t  4  |  5  |  6  \ta posiÁ„o desejada.\n\t_____|_____|__");
+    printf("\n\t     |     |     \t*use o teclado num√©rico para seleciona");
+    printf("r\n\t  4  |  5  |  6  \ta posi√ß√£o desejada.\n\t_____|_____|__");
     printf("___\n\t     |     |     \n\t  1  |  2  |  3  \n\t     |     |");
-    printf("     \n\n\tJogar? (s)sim (n)n„o");
+    printf("     \n\n\tJogar? (s)sim (n)n√£o");
 }
 
 void imprimir(char* wjogo) {

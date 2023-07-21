@@ -83,7 +83,7 @@ int isEmpty(char board[][MAX_SIZE], char tecla) {
     switch (tecla)
     {
     case '1':
-        return board[2][2] == ' '; // Retorna verdadeiro (1) se a posição estiver vazia
+        return board[2][2] == ' '; // Retorna verdadeiro (1) se a posição estiver vazia.
     case '2':
         return board[2][1] == ' ';
     case '3':
@@ -101,7 +101,7 @@ int isEmpty(char board[][MAX_SIZE], char tecla) {
     case '9':
         return board[0][0] == ' ';
     default:
-        return 0; // Retorna falso (0) se a posição não for válida
+        return 0; // Retorna falso (0) se a posição não for válida.
     }
 }
 

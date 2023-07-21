@@ -5,8 +5,8 @@
 #include <time.h> //para sortear números pseudoaleatórios.
 
 #define MAX_SIZE 3
-    //prototypes
 
+//PROTOTYPES
 void info(); //imprime instruções iniciais.
 void show(char board[][MAX_SIZE]); //imprime a tabela em cada instância da partida.
 int fillBoard(char(*board)[3], char teclado, char marcador);  //atualiza as marcações no tabuleiro.
@@ -28,6 +28,12 @@ int main()
             board[i][j] = ' ';
 
     info();
+
+    do
+    {
+        continuar = _getch();
+    } while (continuar != 's' && continuar != 'n'); //garante que não haja entrada inválida.
+
     while (continuar == 's')
     {
         do
@@ -43,7 +49,7 @@ int main()
 
         } while (!verificarVencedor(board));
 
-        printf("\n\n\tjogar novamente?\n\t(s)sim  (n)não");
+        printf("\n\n\tjogar novamente?\n\t(s)sim  (n)nao");
         do
         {
             continuar = _getch();
@@ -102,12 +108,12 @@ int fillBoard(char(*board)[3], char teclado, char marcador)
 
 //functions
 void info() {
-    printf("\n\tJogo da velha. #1\n\n\tComo jogar: \n\n");
+    printf("\n\tTic-Tac-Toe\n\n\tComo jogar: \n\n");
     printf("\t     |     |     \n\t  7  |  8  |  9  \n\t_____|_____|_____");
-    printf("\n\t     |     |     \t*use o teclado numÃ©rico para seleciona");
-    printf("r\n\t  4  |  5  |  6  \ta posiÃ§Ã£o desejada.\n\t_____|_____|__");
+    printf("\n\t     |     |     \t*use o teclado numerico para selecionar");
+    printf("\n\t  4  |  5  |  6  \t\n\t_____|_____|__");
     printf("___\n\t     |     |     \n\t  1  |  2  |  3  \n\t     |     |");
-    printf("     \n\n\tJogar? (s)sim (n)nÃ£o");
+    printf("     \n\n\tJogar? (s)sim (n)nao");
 }
 
 void show(char board[][MAX_SIZE]) {

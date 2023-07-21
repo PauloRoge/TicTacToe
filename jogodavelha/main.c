@@ -1,23 +1,32 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <locale.h>
-#include <conio.h>
-#include <time.h> //para sortear números pseudoaleatórios.
+#include <stdio.h>  //Entrada e saída padrão.
+#include <stdlib.h> //Para função rand e system.
+#include <conio.h>  //Para usar a função _getch.
+#include <time.h>   //Para sortear números pseudoaleatórios.
 
 #define MAX_SIZE 3
 
 //PROTOTYPES
-void info(); //imprime instruções iniciais.
-void show(char board[][MAX_SIZE]); //imprime a tabela em cada instância da partida.
-int fillBoard(char(*board)[3], char teclado, char marcador);  //atualiza as marcações no tabuleiro.
-int verificarVencedor(char jogo[][3]); //função que retorna o resultado da partida.
+
+//Imprime instruções iniciais.
+void info(); 
+
+//Imprime a tabela em cada instância da partida.
+void show(char board[][MAX_SIZE]); 
+
+//Verificar se a posição no tabuleiro está vazia.
+int isEmpty(board, tecla);
+
+//Preenche as marcações no tabuleiro.
+int fillBoard(char(*board)[3], char teclado, char marcador);  
+
+//Função que retorna o resultado da partida.
+int verificarVencedor(char jogo[][3]); 
 
 int main()
 {
-    setlocale(LC_ALL, "portuguese");
     srand((unsigned int)time(NULL));
 
-    char continuar; // armazena uma caracter que codifica uma condição de parar ou não parar.
+    char continuar; // Armazena uma caracter que codifica uma condição de parar ou não parar.
     char tecla;
     int vez = rand() % 2;
 
@@ -25,14 +34,14 @@ int main()
     do
     {
         continuar = _getch();
-    } while (continuar != 's' && continuar != 'n'); //garante que não haver entrada inválida.
+    } while (continuar != 's' && continuar != 'n'); //Garante que não haver entrada inválida.
 
     while (continuar == 's')
     {
         int draw = 0;
-        char board[MAX_SIZE][MAX_SIZE]; //inicializa tabuleiro com (3x3) posições.
+        char board[MAX_SIZE][MAX_SIZE]; //Inicializa tabuleiro com (3x3) posições.
         
-        for (int i = 0; i < MAX_SIZE; i++) //atribui um backspace em cada posição vazia.
+        for (int i = 0; i < MAX_SIZE; i++) //Atribui um backspace em cada posição vazia.
             for (int j = 0; j < MAX_SIZE; j++)
                 board[i][j] = ' ';
         do
@@ -40,12 +49,12 @@ int main()
             system("cls");
             show(board);
 
-            printf("vez de %s", vez == 0 ? "X" : "O");
+            printf("\n\n\n\n\n\n\n\nvez: (%s)",vez == 0 ? "X" : "O");
             do
             {
                 tecla = _getch();
 
-            } while (tecla < 48 ||tecla > 57); //limitando o domínio entre 1 e 9, usando a tabela ASCII.
+            } while (tecla < '1' ||tecla > '9' || !isEmpty(board,tecla)); //Limitando o domínio entre 1 e 9, usando a tabela ASCII.
 
             vez = fillBoard(board, tecla, vez == 0 ? 'X' : 'O');
             draw++;
@@ -54,15 +63,45 @@ int main()
 
         system("cls");
         show(board);
-        if (draw == 9) printf("Draw");
+
+        if (draw == 9 && verificarVencedor(board) == ' ') printf("Draw");
         else
             printf("\n\n%s VENCEU!", verificarVencedor(board) == 'X' ? "X" : "O");
-        
         printf("\n\n\tjogar novamente?\n\t(s)sim  (n)nao");
+
         do
         {
             continuar = _getch();
-        } while (continuar != 's' && continuar != 'n'); //garante que não haja entrada inválida.
+        } while (continuar != 's' && continuar != 'n'); //Garante que não haja entrada inválida.
+    }
+
+    return 0;
+}
+
+//FUNCTIONS
+int isEmpty(char board[][MAX_SIZE], char tecla) {
+    switch (tecla)
+    {
+    case '1':
+        return board[2][2] == ' '; // Retorna verdadeiro (1) se a posição estiver vazia
+    case '2':
+        return board[2][1] == ' ';
+    case '3':
+        return board[2][0] == ' ';
+    case '4':
+        return board[1][2] == ' ';
+    case '5':
+        return board[1][1] == ' ';
+    case '6':
+        return board[1][0] == ' ';
+    case '7':
+        return board[0][2] == ' ';
+    case '8':
+        return board[0][1] == ' ';
+    case '9':
+        return board[0][0] == ' ';
+    default:
+        return 0; // Retorna falso (0) se a posição não for válida
     }
 }
 
@@ -109,30 +148,8 @@ int fillBoard(char(*board)[3], char teclado, char marcador)
     default:
         break;
     }
-    if (marcador == 'X') //retorna a vez do próximo jogador.
-        return 1;
-    else
-        return 0;
-}
 
-//functions
-void info() {
-    printf("\n\tTic-Tac-Toe\n\n\tComo jogar: \n\n");
-    printf("\t     |     |     \n\t  7  |  8  |  9  \n\t_____|_____|_____");
-    printf("\n\t     |     |     \t*use o teclado numerico para selecionar");
-    printf("\n\t  4  |  5  |  6  \t\n\t_____|_____|__");
-    printf("___\n\t     |     |     \n\t  1  |  2  |  3  \n\t     |     |");
-    printf("     \n\n\tJogar? (s)sim (n)nao");
-}
-
-void show(char board[][MAX_SIZE]) {
-    printf("\n\n\n\n\n\n\n\n\n\t\t\t\t\t\t     |     |     \n");
-    printf("\t\t\t\t\t\t  %c  |  %c  |  %c  \n", board[0][2], board[0][1], board[0][0]);
-    printf("\t\t\t\t\t\t_____|_____|_____\n\t\t\t\t\t\t     |     |     \n");
-    printf("\t\t\t\t\t\t  %c  |  %c  |  %c  \n", board[1][2], board[1][1], board[1][0]);
-    printf("\t\t\t\t\t\t_____|_____|_____\n\t\t\t\t\t\t     |     |     \n");
-    printf("\t\t\t\t\t\t  %c  |  %c  |  %c  \n", board[2][2], board[2][1], board[2][0]);
-    printf("\t\t\t\t\t\t     |     |     \n");
+    return (marcador == 'X') ? 1 : 0; //Retorna a vez do próximo jogador.
 }
 
 int verificarVencedor(char board[][3]) {
@@ -159,4 +176,23 @@ int verificarVencedor(char board[][3]) {
     }
 
     return ' ';  // Retorna um espaço em branco se não houver vencedor ainda
+}
+
+void info() {
+    printf("\n\n\tDica: \n\n");
+    printf("\t     |     |     \n\t  7  |  8  |  9  \n\t_____|_____|_____");
+    printf("\n\t     |     |     \t*use o teclado numerico.");
+    printf("\n\t  4  |  5  |  6  \t\n\t_____|_____|__");
+    printf("___\n\t     |     |     \n\t  1  |  2  |  3  \n\t     |     |");
+    printf("     \n\n\tJogar? (s)sim (n)nao");
+}
+
+void show(char board[][MAX_SIZE]) {
+    printf("\n\n\n\n\n\n\n\n\n\t\t\t\t\t\t     |     |     \n");
+    printf("\t\t\t\t\t\t  %c  |  %c  |  %c  \n", board[0][2], board[0][1], board[0][0]);
+    printf("\t\t\t\t\t\t_____|_____|_____\n\t\t\t\t\t\t     |     |     \n");
+    printf("\t\t\t\t\t\t  %c  |  %c  |  %c  \n", board[1][2], board[1][1], board[1][0]);
+    printf("\t\t\t\t\t\t_____|_____|_____\n\t\t\t\t\t\t     |     |     \n");
+    printf("\t\t\t\t\t\t  %c  |  %c  |  %c  \n", board[2][2], board[2][1], board[2][0]);
+    printf("\t\t\t\t\t\t     |     |     \n");
 }

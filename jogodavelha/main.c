@@ -10,7 +10,7 @@
 void info(); //imprime instruções iniciais.
 void show(char board[][MAX_SIZE]); //imprime a tabela em cada instância da partida.
 int fillBoard(char(*board)[3], char teclado, char marcador);  //atualiza as marcações no tabuleiro.
-int verificarVencedor(char jogo[][3]);
+int verificarVencedor(char jogo[][3]); //função que retorna o resultado da partida.
 
 int main()
 {
@@ -21,34 +21,43 @@ int main()
     char tecla;
     int vez = rand() % 2;
 
-    char board[MAX_SIZE][MAX_SIZE]; //inicializa tabuleiro com (3x3) posições.
-
-    for (int i = 0; i < MAX_SIZE; i++) //atribui um backspace em cada posição vazia.
-        for (int j = 0; j < MAX_SIZE; j++)
-            board[i][j] = ' ';
-
     info();
-
     do
     {
         continuar = _getch();
-    } while (continuar != 's' && continuar != 'n'); //garante que não haja entrada inválida.
+    } while (continuar != 's' && continuar != 'n'); //garante que não haver entrada inválida.
 
     while (continuar == 's')
     {
+        int draw = 0;
+        char board[MAX_SIZE][MAX_SIZE]; //inicializa tabuleiro com (3x3) posições.
+        
+        for (int i = 0; i < MAX_SIZE; i++) //atribui um backspace em cada posição vazia.
+            for (int j = 0; j < MAX_SIZE; j++)
+                board[i][j] = ' ';
         do
         {
             system("cls");
             show(board);
 
             printf("vez de %s", vez == 0 ? "X" : "O");
-            tecla = _getch();
+            do
+            {
+                tecla = _getch();
+
+            } while (tecla < 48 ||tecla > 57); //limitando o domínio entre 1 e 9, usando a tabela ASCII.
 
             vez = fillBoard(board, tecla, vez == 0 ? 'X' : 'O');
-            verificarVencedor(board);
+            draw++;
 
-        } while (!verificarVencedor(board));
+        } while (verificarVencedor(board) == ' ' && draw < 9);
 
+        system("cls");
+        show(board);
+        if (draw == 9) printf("Draw");
+        else
+            printf("\n\n%s VENCEU!", verificarVencedor(board) == 'X' ? "X" : "O");
+        
         printf("\n\n\tjogar novamente?\n\t(s)sim  (n)nao");
         do
         {
@@ -126,7 +135,7 @@ void show(char board[][MAX_SIZE]) {
     printf("\t\t\t\t\t\t     |     |     \n");
 }
 
-    int verificarVencedor(char board[][3]) {
+int verificarVencedor(char board[][3]) {
     // Verificar linhas
     for (int i = 0; i < 3; i++) {
         if (board[i][0] == board[i][1] && board[i][0] == board[i][2]) {
@@ -149,5 +158,5 @@ void show(char board[][MAX_SIZE]) {
         return board[0][2];  // Retorna o jogador vencedor (x ou o)
     }
 
-    return 0;  // Retorna um espaço em branco se não houver vencedor ainda
+    return ' ';  // Retorna um espaço em branco se não houver vencedor ainda
 }

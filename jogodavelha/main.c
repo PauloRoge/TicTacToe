@@ -13,7 +13,7 @@ void info();
 //Imprime a tabela em cada instância da partida.
 void show(char board[][MAX_SIZE]); 
 
-//Verificar se a posição no tabuleiro está vazia.
+//Verifica se a posição no tabuleiro está vazia.
 int isEmpty(char board[][MAX_SIZE],char tecla);
 
 //Preenche as marcações no tabuleiro.
@@ -26,22 +26,22 @@ int main()
 {
     srand((unsigned int)time(NULL));
 
-    char continuar; // Armazena uma caracter que codifica uma condição de parar ou não parar.
-    char tecla;
-    int vez = rand() % 2;
+    char continuar; //Armazena um caracter que será codificado como condição de continuar ou não.
+    char tecla; //armazena um caracter de 1 a 9, que será refente à um campo do tabuleiro.
+    int vez = rand() % 2; //É sorteado o player que começa, apenas na primeira partida.
 
-    info();
+    info(); //imprime na tela informações iniciais.
     do
     {
         continuar = _getch();
-    } while (continuar != 's' && continuar != 'n'); //Garante que não haver entrada inválida.
+    } while (continuar != 's' && continuar != 'n'); //Garante não haver entrada inválida.
 
     while (continuar == 's')
     {
         int draw = 0;
         char board[MAX_SIZE][MAX_SIZE]; //Inicializa tabuleiro com (3x3) posições.
         
-        for (int i = 0; i < MAX_SIZE; i++) //Atribui um backspace em cada posição vazia.
+        for (int i = 0; i < MAX_SIZE; i++) //Atribui um backspace em cada posição.
             for (int j = 0; j < MAX_SIZE; j++)
                 board[i][j] = ' ';
         do
@@ -54,7 +54,7 @@ int main()
             {
                 tecla = _getch();
 
-            } while (tecla < '1' ||tecla > '9' || !isEmpty(board,tecla)); //Limitando o domínio entre 1 e 9, usando a tabela ASCII.
+            } while (tecla < '1' ||tecla > '9' || !isEmpty(board,tecla)); //Limitando o domínio entre 1 e 9, a partir da tabela ASCII.
 
             vez = fillBoard(board, tecla, vez == 0 ? 'X' : 'O');
             draw++;
@@ -83,9 +83,9 @@ int isEmpty(char board[][MAX_SIZE], char tecla) {
     switch (tecla)
     {
     case '1':
-        return board[2][2] == ' '; // Retorna verdadeiro (1) se a posição estiver vazia.
+        return board[2][2] == ' '; // Compara e retorna verdadeiro (1) se a posição estiver vazia.
     case '2':
-        return board[2][1] == ' '; //funciona como condição
+        return board[2][1] == ' '; 
     case '3':
         return board[2][0] == ' ';
     case '4':

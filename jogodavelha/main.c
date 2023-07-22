@@ -14,13 +14,13 @@ void info();
 void show(char board[][MAX_SIZE]); 
 
 //Verificar se a posição no tabuleiro está vazia.
-int isEmpty(board, tecla);
+int isEmpty(char board[][MAX_SIZE],char tecla);
 
 //Preenche as marcações no tabuleiro.
 int fillBoard(char(*board)[3], char teclado, char marcador);  
 
 //Função que retorna o resultado da partida.
-int verificarVencedor(char jogo[][3]); 
+int verificarVencedor(char board[][MAX_SIZE]); 
 
 int main()
 {
@@ -85,7 +85,7 @@ int isEmpty(char board[][MAX_SIZE], char tecla) {
     case '1':
         return board[2][2] == ' '; // Retorna verdadeiro (1) se a posição estiver vazia.
     case '2':
-        return board[2][1] == ' ';
+        return board[2][1] == ' '; //funciona como condição
     case '3':
         return board[2][0] == ' ';
     case '4':
@@ -152,32 +152,26 @@ int fillBoard(char(*board)[3], char teclado, char marcador)
     return (marcador == 'X') ? 1 : 0; //Retorna a vez do próximo jogador.
 }
 
-int verificarVencedor(char board[][3]) {
+int verificarVencedor(char board[][MAX_SIZE]) {
     // Verificar linhas
-    for (int i = 0; i < 3; i++) {
-        if (board[i][0] == board[i][1] && board[i][0] == board[i][2]) {
-            return board[i][0];  // Retorna o jogador vencedor (x ou o)
-        }
-    }
+    for (int i = 0; i < 3; i++)
+        if (board[i][0] == board[i][1] && board[i][0] == board[i][2] && board[i][0] != ' ') 
+            return board[i][0];  // Retorna o jogador vencedor (X ou O)
 
     // Verificar colunas
-    for (int j = 0; j < 3; j++) {
-        if (board[0][j] == board[1][j] && board[0][j] == board[2][j]) {
-            return board[0][j];  // Retorna o jogador vencedor (x ou o)
-        }
-    }
+    for (int j = 0; j < 3; j++)
+        if (board[0][j] == board[1][j] && board[0][j] == board[2][j] && board[0][j] != ' ')
+            return board[0][j];  // Retorna o jogador vencedor (X ou O)
 
     // Verificar diagonais
-    if (board[0][0] == board[1][1] && board[0][0] == board[2][2]) {
-        return board[0][0];  // Retorna o jogador vencedor (x ou o)
-    }
-    if (board[0][2] == board[1][1] && board[0][2] == board[2][0]) {
-        return board[0][2];  // Retorna o jogador vencedor (x ou o)
-    }
+    if (board[0][0] == board[1][1] && board[0][0] == board[2][2] && board[0][0] != ' ')
+        return board[0][0];  // Retorna o jogador vencedor (X ou O)
+
+    if (board[0][2] == board[1][1] && board[0][2] == board[2][0] && board[0][2] != ' ')
+        return board[0][2];  // Retorna o jogador vencedor (X ou O)
 
     return ' ';  // Retorna um espaço em branco se não houver vencedor ainda
 }
-
 void info() {
     printf("\n\n\tDica: \n\n");
     printf("\t     |     |     \n\t  7  |  8  |  9  \n\t_____|_____|_____");

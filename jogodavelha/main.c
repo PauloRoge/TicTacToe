@@ -2,13 +2,24 @@
 #include <stdlib.h> //Para função rand e system.
 #include <conio.h>  //Para usar a função _getch.
 #include <time.h>   //Para sortear números pseudoaleatórios.
+#include <locale.h>
 
 #define MAX_SIZE 3
 
+//STRUCTURES
+enum Play
+{
+    PARAR = 0,
+    CONTINUAR
+};
+
 //PROTOTYPES
 
+//Procedimento para executar jogo com dois jogadores
+void DoisJogadores();
+
 //Imprime instruções iniciais.
-void info(); 
+int info(int tutorial); 
 
 //Imprime a tabela em cada instância da partida.
 void show(char board[][MAX_SIZE]); 
@@ -24,58 +35,84 @@ int verificarVencedor(char board[][MAX_SIZE]);
 
 int main()
 {
+    setlocale(LC_ALL, "portuguese");
     srand((unsigned int)time(NULL));
 
-    char continuar; // Armazena uma caracter que codifica uma condição de parar ou não parar.
-    char tecla;
-    int vez = rand() % 2;
+    char menu = 1; // Armazena uma caracter que codifica uma condição.
+    int a = 0; //comuta entre 0 e 1. se o valor é 1 imprime tutorial.
 
-    info();
-    do
+    
+    while (menu)
     {
-        continuar = _getch();
-    } while (continuar != 's' && continuar != 'n'); //Garante que não haver entrada inválida.
+        info(a);
+        menu = _getch();
 
-    while (continuar == 's')
-    {
-        int draw = 0;
-        char board[MAX_SIZE][MAX_SIZE]; //Inicializa tabuleiro com (3x3) posições.
-        
-        for (int i = 0; i < MAX_SIZE; i++) //Atribui um backspace em cada posição vazia.
-            for (int j = 0; j < MAX_SIZE; j++)
-                board[i][j] = ' ';
-        do
+        switch (menu)
         {
+        case '1':
+            break;
+
+        case '2':
+            DoisJogadores();
+            break;
+
+        case '3':
+            a = !a;
+            break;
+
+        case '0':
+            return 0;
+
+        default:
+            break;
+        }  
+    }
+}
+
+//PROCEDURES
+void DoisJogadores() {
+        char board[MAX_SIZE][MAX_SIZE]; //Inicializa tabuleiro com (3x3) posições.
+        char teclado = CONTINUAR;
+        int vez = rand() % 2;
+
+        while (teclado == CONTINUAR)
+        {
+            int nmoves = 0; //número de movimentos.
+            for (int i = 0; i < MAX_SIZE; i++) //Atribui um backspace em cada posição vazia.
+                for (int j = 0; j < MAX_SIZE; j++)
+                    board[i][j] = ' ';
+
+            while (verificarVencedor(board) == ' ' && nmoves < 9)
+            {
+                system("cls"); //começa o jogo
+                show(board);
+                printf("\nvez: (%s)", vez == 0 ? "X" : "O");
+                nmoves++;
+
+                do
+                {
+                    teclado = _getch();
+                } while (teclado < '1' || teclado > '9' || !isEmpty(board, teclado)); //Limitando o domínio entre 1 e 9, usando a tabela ASCII.
+
+                vez = fillBoard(board, teclado, vez == 0 ? 'X' : 'O');
+                
+            }
             system("cls");
             show(board);
 
-            printf("\n\n\n\n\n\n\n\nvez: (%s)",vez == 0 ? "X" : "O");
+            if (nmoves == 9 && verificarVencedor(board) == ' ') printf("Draw");
+            else
+                printf("\n\n%s VENCEU!", verificarVencedor(board) == 'X' ? "X" : "O");
+
+            printf("\n\nDeseja jogar novamente? (s)sim (n)nao");
             do
             {
-                tecla = _getch();
+                teclado = _getch();
+            } while (teclado !='s' && teclado != 'n');
 
-            } while (tecla < '1' ||tecla > '9' || !isEmpty(board,tecla)); //Limitando o domínio entre 1 e 9, usando a tabela ASCII.
-
-            vez = fillBoard(board, tecla, vez == 0 ? 'X' : 'O');
-            draw++;
-
-        } while (verificarVencedor(board) == ' ' && draw < 9);
-
-        system("cls");
-        show(board);
-
-        if (draw == 9 && verificarVencedor(board) == ' ') printf("Draw");
-        else
-            printf("\n\n%s VENCEU!", verificarVencedor(board) == 'X' ? "X" : "O");
-        printf("\n\n\tjogar novamente?\n\t(s)sim  (n)nao");
-
-        do
-        {
-            continuar = _getch();
-        } while (continuar != 's' && continuar != 'n'); //Garante que não haja entrada inválida.
-    }
-
-    return 0;
+            teclado = (teclado == 's') ? CONTINUAR : PARAR;
+        }
+       
 }
 
 //FUNCTIONS
@@ -172,13 +209,23 @@ int verificarVencedor(char board[][MAX_SIZE]) {
 
     return ' ';  // Retorna um espaço em branco se não houver vencedor ainda
 }
-void info() {
-    printf("\n\n\tDica: \n\n");
-    printf("\t     |     |     \n\t  7  |  8  |  9  \n\t_____|_____|_____");
-    printf("\n\t     |     |     \t*use o teclado numerico.");
-    printf("\n\t  4  |  5  |  6  \t\n\t_____|_____|__");
-    printf("___\n\t     |     |     \n\t  1  |  2  |  3  \n\t     |     |");
-    printf("     \n\n\tJogar? (s)sim (n)nao");
+
+int info(int tutorial) {
+    if (!tutorial)
+    {
+        system("cls");
+        printf("\n\n\tEscolha o modo de jogo:\n\n\t(1)Um Jogador\n\t(2)Dois Jogadores\n\t(3)");
+        printf("Como Jogar\n\t(0)Sair\n\n");
+    }
+        if (tutorial)
+        {
+            printf("\t     |     |     \n\t  7  |  8  |  9  \n\t_____|_____|_____");
+            printf("\n\t     |     |     \tuse o teclado numerico.");
+            printf("\n\t  4  |  5  |  6  \t\n\t_____|_____|__");
+            printf("___\n\t     |     |     \n\t  1  |  2  |  3  \n\t     |     |\n\n");
+            return 0;
+        }
+        return 1;
 }
 
 void show(char board[][MAX_SIZE]) {

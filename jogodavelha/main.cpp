@@ -1,8 +1,6 @@
 #include <iostream> //Entrada e saída padrão. 
-#include <stdlib.h> //Para função rand e system.
 #include <conio.h>  //Para usar a função _getch.
 #include <time.h>   //Para sortear números pseudoaleatórios.
-#include <locale.h>
 #include <Windows.h>
 #include "velha.h"
 
@@ -10,19 +8,12 @@
 
 using namespace std;
 
-//STRUCTURES
-enum Play
-{
-    PARAR = 0,
-    CONTINUAR
-};
-
 //PROTOTYPES
 // Procedimento para executar jogo contra Computador.
-void UmJogador(char board[][MAX_SIZE], char teclado, int vez, int rodada);
+void UmJogador(char board[][MAX_SIZE], char teclado, int rodada, int vez = 0);
 
 // Procedimento para executar jogo com dois jogadores
-void DoisJogadores(char board[][MAX_SIZE], char teclado, int vez, int rodada);
+void DoisJogadores(char board[][MAX_SIZE], char teclado, int rodada, int vez = 0);
 
 // Imprime instruções iniciais.
 int info(int tutorial);
@@ -36,12 +27,8 @@ int main()
     srand((unsigned int)time(NULL));
 
     char board[MAX_SIZE][MAX_SIZE]; //Inicializa tabuleiro com (3x3) posições.
-    char teclado = CONTINUAR;
     char menu = 1; // Armazena uma caracter que codifica uma condição.
     int a = 0; // Comuta entre 0 e 1. se o valor é 1 imprime tutorial.
-    int vez = 0;
-    int rodada = rand() % 2;
-
 
     while (menu)
     {
@@ -51,11 +38,11 @@ int main()
         switch (menu)
         {
         case '1':
-            UmJogador(board, teclado, vez, rodada);
+            UmJogador(board, 1, rand() % 2);
             break;
 
         case '2':
-            DoisJogadores(board, teclado, vez, rodada);
+            DoisJogadores(board, 1, rand() % 2);
             break;
 
         case '3':
@@ -86,9 +73,9 @@ void UmJogador(char board[][MAX_SIZE], char teclado, int vez, int rodada) {
     cpu = (jogador == 'X') ? 'O' : 'X';
 
     system("cls");
-    teclado = CONTINUAR;
 
-    while (teclado == CONTINUAR)
+    teclado = 1;
+    while (teclado)
     {
         int nmoves = 0; //número de movimentos.
         for (int i = 0; i < MAX_SIZE; i++) //Atribui um backspace em cada posição vazia.
@@ -137,7 +124,7 @@ void UmJogador(char board[][MAX_SIZE], char teclado, int vez, int rodada) {
 
 void DoisJogadores(char board[][MAX_SIZE], char teclado, int vez, int rodada) {
 
-    while (teclado == CONTINUAR)
+    while (teclado)
     {
         int nmoves = 0; //número de movimentos.
         for (int i = 0; i < MAX_SIZE; i++) //Atribui um backspace em cada posição vazia.
